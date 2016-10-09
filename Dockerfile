@@ -1,27 +1,28 @@
-FROM revmischa/mp3:latest
+FROM revmischa/ezstream:latest
 
-ARG s3path="s3://s3-us-west-2.amazonaws.com/tunes.llolo.lol/01_walking-on-water-original-mix.wav"
+# deps
+RUN ["yum", "-y", "install", "python-virtualenv"]
 
-ENV BOOTSTRAP_DIR="/home/streamer/ice3"
-
-# for building
-# RUN sysctl -w net.ipv6.conf.all.disable_ipv6=1
-# RUN sysctl -w net.ipv6.conf.default.disable_ipv6=1
-
-RUN ["yum", "-y", "install", "gcc", "make", "libshout-devel", "libxml2-devel", "taglib-devel", "libvorbis-devel", "wget", "libid3tag-devel"]
-
-RUN ["useradd", "-m", "streamer"]
+# user
 WORKDIR /home/streamer
 USER streamer
-RUN mkdir $BOOTSTRAP_DIR
-WORKDIR $BOOTSTRAP_DIR
-RUN ["wget", "http://downloads.xiph.org/releases/ezstream/ezstream-0.6.0.tar.gz"]
-RUN ["tar", "-zxf", "ezstream-0.6.0.tar.gz"]
-WORKDIR ezstream-0.6.0
-RUN ["./configure"]
-RUN ["make", "-j2"]
-USER root
-RUN ["make", "install"]
-# USER streamer
 
-CMD ezstreamer
+# python venv
+RUN ["virtualenv", "venv"]
+RUN ["bash", "-c", "source venv/bin/activate && easy_install pip"]
+
+# python deps
+ADD requirements.txt ./
+RUN ["bash", "-c", "source venv/bin/activate && pip install -r requirements.txt"]
+
+# configure
+ADD playlist.sh s3playlist.py requirements.txt ezstream.xml update-config.sh ./
+
+# set config from env
+# you should have these set
+ENV s3bucket=tunes.llolo.lol,\
+    stream_uri=http://source.my.server:8000/mountpoint.mp3,\
+    stream_pass=mycoolpassword
+
+# CMD cat ezstream.xml
+CMD ./update-config.sh && echo "Beginning stream..." && ezstream -c ezstream.xml

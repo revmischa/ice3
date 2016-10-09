@@ -1,17 +1,16 @@
-TCP_PORTS = 80
-TCP_FORWARD := $(shell PORT_FORWARD=""; for port in $(TCP_PORTS); do PORT_FORWARD="$$PORT_FORWARD -p $$port:$$port"; done; echo $$PORT_FORWARD)
-
+# override these
+s3bucket ?= "tunes.llolo.lol"
+stream_uri ?= http://source.my.server:8080/mountpoint.mp3
+stream_pass ?= mycoolpassword
+# NB if you have weird characters in any of these config vars sed might get mad. should fix that.
 
 TEMPLATE_NAME ?= ice3
 
 run: image
-	docker run -ti $(TCP_FORWARD) -t $(TEMPLATE_NAME)
+	docker run -ti $(TEMPLATE_NAME)
 
 daemon: image
-	docker run -d $(TCP_FORWARD) -t $(TEMPLATE_NAME)
-
-ports:
-	@ echo "forward $(TCP_FORWARD)"
+	docker run -d -t $(TEMPLATE_NAME)
 
 shell: image
 	docker run -a stdin -a stdout -i -t $(TEMPLATE_NAME) /bin/bash
@@ -19,3 +18,6 @@ shell: image
 image:
 	docker build -t $(TEMPLATE_NAME) .
 
+push: image
+	docker tag $(TEMPLATE_NAME):latest revmischa/$(TEMPLATE_NAME)
+	docker push revmischa/$(TEMPLATE_NAME)
