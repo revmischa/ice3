@@ -18,6 +18,8 @@ shell: image
 image:
 	docker build -t $(TEMPLATE_NAME) .
 
-push: image
+tag: 
 	docker tag $(TEMPLATE_NAME):latest revmischa/$(TEMPLATE_NAME)
+
+push: tag | image
 	docker push revmischa/$(TEMPLATE_NAME)
