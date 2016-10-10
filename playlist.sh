@@ -4,7 +4,7 @@
 
 if [[ -z "${1}" ]]; then
     # get filename to play
-    python2 s3playlist.py $s3bucket
+    source venv/bin/activate && python2 s3playlist.py $s3bucket
 elif [[ x"${1}" -eq "xartist" ]]; then
     # return artist
     # not implemented...

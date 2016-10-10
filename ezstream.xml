@@ -14,7 +14,7 @@
        output format of the stream.
      -->
     <format>MP3</format>
-    <filename>playlist.sh</filename>
+    <filename>./playlist.sh</filename>
     <!--
        Indicate that <filename> contains an executable program or script,
        which prints a single line with a filename to standard output:
