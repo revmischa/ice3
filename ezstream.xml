@@ -65,6 +65,13 @@
             <!-- <encode>Not supported Yet</encode> -->
         </encdec>
         <encdec>
+            <!-- Support for WAV decoding: -->
+            <format>WAV</format>
+            <match>.wav</match>
+            <decode>sox @T@ -t raw -</decode>
+            <!-- <encode>Not supported Yet</encode> -->
+        </encdec>
+        <encdec>
             <!--
                Support for MP3 decoding via madplay, and encoding via LAME:
              -->
@@ -72,7 +79,7 @@
             <match>.mp3</match>
             <!-- Note: madplay uses host byte order for raw samples. -->
             <decode>madplay -b 16 -R 44100 -S -o raw:- @T@</decode>
-            <encode>lame --preset vbr 192 -r -s 44.1 --bitwidth 16 - -</encode>
+            <encode>lame --preset 256 -r -s 44.1 --bitwidth 16 - -</encode>
         </encdec>
         <encdec>
             <!--
