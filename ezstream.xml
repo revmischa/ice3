@@ -87,7 +87,7 @@
 
         <decoders>
           <decoder>
-            <format>MP3</format>
+            <name>MP3 with madplay</name>
             <file_ext>.mp3</file_ext>
             <!-- wish this could just passthru??? -->
             <program>madplay -b 16 -R 44100 -S -o raw:- @T@</program>
