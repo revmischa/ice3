@@ -34,7 +34,7 @@ class S3Playlister():
         May download the file.
         """
         files = self.get_s3_files()
-        keys = [f['Key'] for f in files]
+        keys = [f['Key'].encode('utf-8') for f in files]
         mp3keys = set([k for k in keys if self.is_key_playable(k)])
         if not mp3keys:
             self._fail("No files found in bucket")
@@ -81,7 +81,6 @@ class S3Playlister():
             return self.s3client().list_objects_v2(
                 Bucket=self.bucket_name,
                 StartAfter=tok,
-                EncodingType='utf-8',
             )
         res = get_more()
         ret.extend(res['Contents'])
