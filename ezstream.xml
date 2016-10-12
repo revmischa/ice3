@@ -33,9 +33,13 @@
     <svrinfochannels>2</svrinfochannels>
     <svrinfosamplerate>44100</svrinfosamplerate>
     <!--
-      Prohibit the server to advertise the stream on a public YP directory:
+      public YP directory:
      -->
     <svrinfopublic>1</svrinfopublic>
+
+    <refresh_interval>30</refresh_interval>
+    <normalize_strings>Yes</normalize_strings>
+
     <reencode>
         <!-- Enable the reencoding feature: -->
         <enable>1</enable>
