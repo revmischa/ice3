@@ -81,6 +81,7 @@ class S3Playlister():
             return self.s3client().list_objects_v2(
                 Bucket=self.bucket_name,
                 StartAfter=tok,
+                EncodingType='utf-8',
             )
         res = get_more()
         ret.extend(res['Contents'])
