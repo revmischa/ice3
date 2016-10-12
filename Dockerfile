@@ -4,20 +4,19 @@ FROM revmischa/ezstream:latest
 RUN ["yum", "-y", "install", "python-virtualenv"]
 
 WORKDIR /home/streamer
-ADD playlist.sh s3playlist.py requirements.txt update-config.sh  ./
 
+# python deps
+ADD requirements.txt  ./
 USER streamer
-
 # python venv
 RUN ["virtualenv", "venv"]
 RUN ["bash", "-c", "source venv/bin/activate && easy_install pip"]
-
 # python deps
 ADD requirements.txt ./
 RUN ["bash", "-c", "source venv/bin/activate && pip install -r requirements.txt"]
 
 # configuration
-ADD ezstream.xml ./
+ADD ezstream.xml playlist.sh s3play.py update-config.sh ./
 USER root
 RUN ["chown", "-R", "streamer", "/home/streamer"]
 USER streamer
