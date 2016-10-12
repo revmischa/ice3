@@ -82,7 +82,7 @@
             <format>MP3</format>
             <match>.mp3</match>
             <!-- Note: madplay uses host byte order for raw samples. -->
-            <decode>madplay -b 16 -R 44100 -S -o raw:- @T@</decode>
+            <!-- <decode>madplay -b 16 -R 44100 -S -o raw:- @T@</decode> -->
             <encode>lame --preset 256 -r -s 44.1 --bitwidth 16 - -</encode>
         </encdec>
         <encdec>
