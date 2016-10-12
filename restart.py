@@ -15,6 +15,9 @@ def restart_service(service):
         cluster=CLUSTER,
     )
     task_arns = res['taskArns']
+    if not task_arns:
+        print("Failed to get task_arns :(")
+        return
 
     for tarn in task_arns:
         # scale down
