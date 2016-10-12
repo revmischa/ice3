@@ -16,7 +16,7 @@ ADD requirements.txt ./
 RUN ["bash", "-c", "source venv/bin/activate && pip install -r requirements.txt"]
 
 # configuration
-ADD ezstream.xml playlist.sh s3play.py update-config.sh ./
+ADD ezstream.xml playlist.sh s3playlist.py update-config.sh ./
 USER root
 RUN ["chown", "-R", "streamer", "/home/streamer"]
 USER streamer

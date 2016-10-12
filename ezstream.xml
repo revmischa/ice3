@@ -75,12 +75,7 @@
             <decode>sox @T@ -t raw -</decode>
             <!-- <encode>Not supported Yet</encode> -->
         </encdec>
-<!--         <encdec>
-            <format>MP3</format>
-            <match>.mp3</match>
-            <decode>madplay -b 16 -R 44100 -S -o raw:- @T@</decode>
-            <encode>lame --preset 256 -r -s 44.1 --bitwidth 16 - -</encode>
-        </encdec> -->
+            <!-- <decode>madplay -b 16 -R 44100 -S -o raw:- @T@</decode> -->
         <encdec>
             <!--
                Support for Vorbis decoding via oggdec, and encoding via oggenc:
