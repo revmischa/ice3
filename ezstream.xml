@@ -39,6 +39,7 @@
 
     <refresh_interval>5</refresh_interval>
     <normalize_strings>Yes</normalize_strings>
+    <reconnect_attempts>9999</reconnect_attempts>
 
     <reencode>
         <!-- Enable the reencoding feature: -->
