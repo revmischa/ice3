@@ -37,7 +37,7 @@
      -->
     <svrinfopublic>1</svrinfopublic>
 
-    <refresh_interval>30</refresh_interval>
+    <refresh_interval>5</refresh_interval>
     <normalize_strings>Yes</normalize_strings>
 
     <reencode>
