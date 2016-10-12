@@ -25,17 +25,17 @@
       It's up to you to make sure that the bitrate/samplerate/channels
       information matches up with your lame encoder settings below.
      -->
-    <svrinfoname>My Stream</svrinfoname>
-    <svrinfourl>http://www.oddsock.org</svrinfourl>
-    <svrinfogenre>RockNRoll</svrinfogenre>
-    <svrinfodescription>This is a stream description</svrinfodescription>
-    <svrinfobitrate>128</svrinfobitrate>
+    <svrinfoname>Radiioooo KLULZ</svrinfoname>
+    <svrinfourl>http://radioo.llolo.lol</svrinfourl>
+    <svrinfogenre>Experimental</svrinfogenre>
+    <svrinfodescription>A random selection of music and mixes contributed by listeners</svrinfodescription>
+    <svrinfobitrate>256</svrinfobitrate>
     <svrinfochannels>2</svrinfochannels>
     <svrinfosamplerate>44100</svrinfosamplerate>
     <!--
       Prohibit the server to advertise the stream on a public YP directory:
      -->
-    <svrinfopublic>0</svrinfopublic>
+    <svrinfopublic>1</svrinfopublic>
     <reencode>
         <!-- Enable the reencoding feature: -->
         <enable>1</enable>
@@ -79,7 +79,7 @@
             <match>.mp3</match>
             <!-- Note: madplay uses host byte order for raw samples. -->
             <decode>madplay -b 16 -R 44100 -S -o raw:- @T@</decode>
-            <encode>lame --preset cbr 256 -r -s 44.1 --bitwidth 16 - -</encode>
+            <encode>lame --preset 256 -r -s 44.1 --bitwidth 16 - -</encode>
         </encdec>
         <encdec>
             <!--
