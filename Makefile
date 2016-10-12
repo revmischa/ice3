@@ -21,5 +21,8 @@ image:
 tag: 
 	docker tag $(TEMPLATE_NAME):latest revmischa/$(TEMPLATE_NAME)
 
-push: tag | image
+push: | tag image
 	docker push revmischa/$(TEMPLATE_NAME)
+
+push-restart: push
+	python restart.py
