@@ -77,6 +77,13 @@
             <!-- <encode>Not supported Yet</encode> -->
         </encdec>
         <encdec>
+            <!-- Support for AIFF decoding: -->
+            <format>AIFF</format>
+            <match>.aiff</match>
+            <decode>sox @T@ -t raw -</decode>
+            <!-- <encode>Not supported Yet</encode> -->
+        </encdec>
+        <encdec>
             <!--
                Support for MP3 decoding via madplay, and encoding via LAME:
              -->
