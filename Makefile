@@ -1,7 +1,7 @@
 # override these
 s3bucket ?= "tunes.llolo.lol"
-stream_uri ?= http://source.my.server:8080/mountpoint.mp3
-stream_pass ?= mycoolpassword
+STREAM_URL ?= http://source.my.server:8080/mountpoint.mp3
+STREAM_PASS ?= mycoolpassword
 # NB if you have weird characters in any of these config vars sed might get mad. should fix that.
 
 TEMPLATE_NAME ?= ice3

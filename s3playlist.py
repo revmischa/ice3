@@ -78,17 +78,20 @@ class S3Playlister():
         ret = []
 
         def get_more(tok=''):
-            return self.s3client().list_objects_v2(
-                Bucket=self.bucket_name,
-                StartAfter=tok,
-            )
+            params = dict(Bucket=self.bucket_name)
+            if tok:
+                params['ContinuationToken'] = tok
+            return self.s3client().list_objects_v2(**params)
         res = get_more()
         ret.extend(res['Contents'])
 
         while res['IsTruncated']:
-            tok = res['ContinuationToken']
-            res = get_more(tok)
-            ret += res['Contents']
+            if 'NextContinuationToken' in res:
+                tok = res['NextContinuationToken']
+                res = get_more(tok)
+                ret += res['Contents']
+            else:
+                print("Failed to find NextContinuationToken")
         return ret
 
     def is_key_playable(self, s3key):
@@ -125,4 +128,3 @@ if __name__ == '__main__':
     pl = S3Playlister(bucket_name)
 
     print(pl.get_next_file())
-
