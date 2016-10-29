@@ -37,7 +37,7 @@ class S3Playlister():
         keys = [f['Key'].encode('utf-8') for f in files]
         mp3keys = set([k for k in keys if self.is_key_playable(k)])
         if not mp3keys:
-            self._fail("No files found in bucket")
+            self._fail("No files found in bucket {}".format(self.bucket_name))
         # pick random key, get file obj
         mp3key = random.sample(mp3keys, 1)[0]
         mp3keyobj = None
@@ -125,3 +125,4 @@ if __name__ == '__main__':
     pl = S3Playlister(bucket_name)
 
     print(pl.get_next_file())
+
