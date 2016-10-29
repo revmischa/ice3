@@ -7,7 +7,7 @@
    are controlled via the paramters to lame.
  -->
 <ezstream>
-    <url>%STREAM_URI%</url>
+    <url>%STREAM_URL%</url>
     <sourcepassword>%STREAM_PASS%</sourcepassword>
     <!--
        Since the reencoding feature is enabled below, <format /> sets the
@@ -25,10 +25,10 @@
       It's up to you to make sure that the bitrate/samplerate/channels
       information matches up with your lame encoder settings below.
      -->
-    <svrinfoname>Radiioooo KLULZ</svrinfoname>
-    <svrinfourl>http://radioo.llolo.lol</svrinfourl>
-    <svrinfogenre>Experimental</svrinfogenre>
-    <svrinfodescription>A random selection of music and mixes contributed by listeners</svrinfodescription>
+    <svrinfoname>%STREAM_NAME%</svrinfoname>
+    <svrinfourl>%INFO_URL%</svrinfourl>
+    <svrinfogenre>%GENRE%</svrinfogenre>
+    <svrinfodescription>%DESCRIPTION%</svrinfodescription>
     <svrinfobitrate>256</svrinfobitrate>
     <svrinfochannels>2</svrinfochannels>
     <svrinfosamplerate>44100</svrinfosamplerate>
