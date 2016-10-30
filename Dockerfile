@@ -22,11 +22,5 @@ RUN ["chown", "-R", "streamer", "/home/streamer"]
 USER streamer
 RUN ["chmod", "og-rw", "ezstream.xml", "playlist.sh", "s3playlist.py"]
 
-# # set config from env
-# # you should have these set
-ENV s3bucket tunes.llolo.lol
-ENV STREAM_URL http://source.my.server:8000/mountpoint.mp3
-ENV STREAM_PASS mycoolpassword
-
 # # CMD cat ezstream.xml
 CMD ./update-config.sh && echo "Beginning stream..." && ezstream -vv -c ezstream.xml

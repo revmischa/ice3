@@ -8,6 +8,7 @@
  -->
 <ezstream>
     <url>%STREAM_URL%</url>
+    <sourceuser>%STREAM_USER%</sourceuser>
     <sourcepassword>%STREAM_PASS%</sourcepassword>
     <!--
        Since the reencoding feature is enabled below, <format /> sets the

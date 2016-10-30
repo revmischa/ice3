@@ -5,6 +5,7 @@ import random
 import sys
 import logging
 import os
+import re
 import ConfigParser
 
 logging.basicConfig(level=logging.DEBUG)
@@ -131,15 +132,17 @@ class S3Playlister():
         url = self.config.get('streamer', 'SQS_URL')
         if not url:
             return
-        sqs = boto3.client('sqs')
+        # dumb. https://github.com/boto/boto3/issues/871
+        region = re.search(r'sqs\.([\w-]+)\.amazonaws\.com', url).group(1)
+        sqs = boto3.resource('sqs', region_name=region)
         msg = {
             'FileName': {
                 'StringValue': title,
                 'DataType': 'String'
             }
         }
-        sqs.send_message(
-            QueueUrl=url,
+        queue = sqs.Queue(url)
+        queue.send_message(
             MessageAttributes=msg,
             MessageBody=title
         )
