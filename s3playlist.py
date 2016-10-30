@@ -5,6 +5,7 @@ import random
 import sys
 import logging
 import os
+import configparser
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -14,10 +15,14 @@ class S3Playlister():
     """Grabs files from the specified bucket and plays a random one."""
 
     def __init__(self, bucket_name):
-        """Save bucket name."""
-        assert(bucket_name)
-        self.bucket_name = bucket_name
+        """Init."""
         self._s3 = None
+        self.config = None
+        self._read_config()
+
+        assert 'bucket_name' in self.config
+        self.bucket_name = self.config['bucket_name']
+
         # create storage area
         from os.path import expanduser
         storage_dir = expanduser("~/s3playlist")
@@ -119,12 +124,38 @@ class S3Playlister():
         self._s3 = boto3.client('s3')
         return self._s3
 
+    def post_sqs(self, title):
+        """Post a message containing the track we're about to play."""
+        sqs = boto3.client('sqs')
+        msg = {
+            'FileName': {
+                'StringValue': title,
+                'DataType': 'String'
+            }
+        }
+        url = self.config['SQS_URL']
+        sqs.send_message(QueueUrl=url, MessageAttributes=msg)
+
+    def _read_config(self):
+        if self.config:
+            return self.config
+        config = configparser.ConfigParser()
+        sections = config.read('example.ini')
+        if 'streamer' not in sections:
+            print("Failed to load config")
+            sys.exit(1)
+        cnf = sections['streamer']
+        self.config = cnf
+        return cnf
+
 if __name__ == '__main__':
-    if len(sys.argv) != 2 or not sys.argv[1]:
-        print("Please specify bucket name")
-        sys.exit(1)
-    bucket_name = sys.argv[1]
+    pl = S3Playlister()
 
-    pl = S3Playlister(bucket_name)
+    # pick next track
+    file = pl.get_next_file()
 
-    print(pl.get_next_file())
+    # track update
+    if 'SQS_URL' in pl.config:
+        pl.post_sqs_title(os.path.basename(file))
+
+    print(file)
