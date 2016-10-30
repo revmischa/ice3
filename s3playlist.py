@@ -128,7 +128,29 @@ class S3Playlister():
         self._s3 = boto3.client('s3')
         return self._s3
 
-    def post_sqs_title(self, filename, tag):
+    def post_sns_track(self, filename, tag):
+        """Post a message containing the track we're about to play."""
+        arn = self.config.get('streamer', 'SNS_ARN')
+        if not arn:
+            return
+        # dumb. https://github.com/boto/boto3/issues/871
+        region = re.search(r'arn:aws:sns:([\w-]+):', arn).group(1)
+        sns = boto3.resource('sns', region_name=region)
+        topic = sns.Topic(arn)
+
+        # our message to deliver
+        msg = {'FileName': {'StringValue': filename, 'DataType': 'String'}}
+        if tag:
+            msg['Artist'] = {'StringValue': tag.artist, 'DataType': 'String'}
+            msg['Title'] = {'StringValue': tag.title, 'DataType': 'String'}
+            msg['Album'] = {'StringValue': tag.album, 'DataType': 'String'}
+
+        topic.publish(
+            MessageAttributes=msg,
+            Message='track_update'
+        )
+
+    def post_sqs_track(self, filename, tag):
         """Post a message containing the track we're about to play."""
         url = self.config.get('streamer', 'SQS_URL')
         if not url:
@@ -171,6 +193,7 @@ if __name__ == '__main__':
     # track update
     track_info = eyed3.load(file)
 
-    pl.post_sqs_title(os.path.basename(file), track_info.tag)
+    pl.post_sqs_track(os.path.basename(file), track_info.tag)
+    pl.post_sns_track(os.path.basename(file), track_info.tag)
 
     print(file)
