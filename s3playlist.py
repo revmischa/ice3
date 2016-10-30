@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import ConfigParser
+import eyed3
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -127,7 +128,7 @@ class S3Playlister():
         self._s3 = boto3.client('s3')
         return self._s3
 
-    def post_sqs_title(self, title):
+    def post_sqs_title(self, filename, tag):
         """Post a message containing the track we're about to play."""
         url = self.config.get('streamer', 'SQS_URL')
         if not url:
@@ -135,16 +136,18 @@ class S3Playlister():
         # dumb. https://github.com/boto/boto3/issues/871
         region = re.search(r'sqs\.([\w-]+)\.amazonaws\.com', url).group(1)
         sqs = boto3.resource('sqs', region_name=region)
-        msg = {
-            'FileName': {
-                'StringValue': title,
-                'DataType': 'String'
-            }
-        }
+
+        # our message to deliver
+        msg = {'FileName': {'StringValue': filename, 'DataType': 'String'}}
+        if tag:
+            msg['Artist'] = {'StringValue': tag.artist, 'DataType': 'String'}
+            msg['Title'] = {'StringValue': tag.title, 'DataType': 'String'}
+            msg['Album'] = {'StringValue': tag.album, 'DataType': 'String'}
+
         queue = sqs.Queue(url)
         queue.send_message(
             MessageAttributes=msg,
-            MessageBody=title
+            MessageBody='track_update'
         )
 
     def _read_config(self):
@@ -166,6 +169,8 @@ if __name__ == '__main__':
     file = pl.get_next_file()
 
     # track update
-    pl.post_sqs_title(os.path.basename(file))
+    track_info = eyed3.load(file)
+
+    pl.post_sqs_title(os.path.basename(file), track_info.tag)
 
     print(file)
