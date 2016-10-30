@@ -5,7 +5,7 @@ import random
 import sys
 import logging
 import os
-import configparser
+import ConfigParser
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -14,14 +14,16 @@ log = logging.getLogger(__name__)
 class S3Playlister():
     """Grabs files from the specified bucket and plays a random one."""
 
-    def __init__(self, bucket_name):
+    def __init__(self):
         """Init."""
         self._s3 = None
         self.config = None
         self._read_config()
 
-        assert 'bucket_name' in self.config
-        self.bucket_name = self.config['bucket_name']
+        self.bucket_name = self.config.get('streamer', 'BUCKET_NAME')
+        if not self.bucket_name:
+            print("BUCKET_NAME not configured")
+            sys.exit(1)
 
         # create storage area
         from os.path import expanduser
@@ -124,8 +126,11 @@ class S3Playlister():
         self._s3 = boto3.client('s3')
         return self._s3
 
-    def post_sqs(self, title):
+    def post_sqs_title(self, title):
         """Post a message containing the track we're about to play."""
+        url = self.config.get('streamer', 'SQS_URL')
+        if not url:
+            return
         sqs = boto3.client('sqs')
         msg = {
             'FileName': {
@@ -133,20 +138,23 @@ class S3Playlister():
                 'DataType': 'String'
             }
         }
-        url = self.config['SQS_URL']
-        sqs.send_message(QueueUrl=url, MessageAttributes=msg)
+        sqs.send_message(
+            QueueUrl=url,
+            MessageAttributes=msg,
+            MessageBody=title
+        )
 
     def _read_config(self):
         if self.config:
             return self.config
-        config = configparser.ConfigParser()
-        sections = config.read('example.ini')
+        config = ConfigParser.ConfigParser()
+        config.read('ice3.ini')
+        sections = config.sections()
         if 'streamer' not in sections:
             print("Failed to load config")
             sys.exit(1)
-        cnf = sections['streamer']
-        self.config = cnf
-        return cnf
+        self.config = config
+        return config
 
 if __name__ == '__main__':
     pl = S3Playlister()
@@ -155,7 +163,6 @@ if __name__ == '__main__':
     file = pl.get_next_file()
 
     # track update
-    if 'SQS_URL' in pl.config:
-        pl.post_sqs_title(os.path.basename(file))
+    pl.post_sqs_title(os.path.basename(file))
 
     print(file)
