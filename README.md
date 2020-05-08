@@ -1,4 +1,10 @@
-This is a containerized ices streamer for automating streaming of audio files to an icecast server.
+# Quickstart
+cp sample/* ./
+# edit icecast.xml and streambot.env
+docker-compose up
+
+# Bleh
+This is a containerized ezstremer streamer for automating streaming of audio files to an icecast server.
 
 It runs in docker, you just need to set some environment variables.
 

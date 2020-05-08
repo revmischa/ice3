@@ -3,11 +3,7 @@ services:
   streambot:
     build:
       context: ./streambot
-      # dockerfile: Dockerfile-streambot
-      # target: ice3
-    ports:
-      - "80:8080"
-    env_file: streambot.env
+    env_file: ./streambot.env
     depends_on:
       - icecast
     # logging:
@@ -21,7 +17,9 @@ services:
       context: ./icecast
     ports:
       - "8000:8000"
-    env_file: settings.env
+    volumes:
+      - ./icecast.xml:/etc/icecast2/icecast.xml
+      - ./icecast-logs:/var/log/icecast2
     # logging:
     #   driver: awslogs
     #   options:

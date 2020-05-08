@@ -68,5 +68,6 @@ RUN yum clean all && \
 
 # configuration
 USER streambot
+WORKDIR /home/streambot
 RUN chmod og-rw ezstream.xml playlist.sh s3playlist.py
 CMD ./update-config.sh && echo "Beginning stream..." && ezstream -vv -c ezstream.xml

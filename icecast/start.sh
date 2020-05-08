@@ -20,7 +20,7 @@ if [ -n "$ICECAST_PASSWORD" ]; then
     sed -i "s/<password>[^<]*<\/password>/<password>$ICECAST_PASSWORD<\/password>/g" /etc/icecast2/icecast.xml
 fi
 
-cat /etc/icecast2/icecast.xml
+# cat /etc/icecast2/icecast.xml
 
 icecast2 -n -c /etc/icecast2/icecast.xml
 #supervisord -n -c /etc/supervisord.conf

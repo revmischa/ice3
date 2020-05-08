@@ -15,7 +15,7 @@
     <servers>
         <server>
             <!-- Identifying name (default: "default") -->
-            <name>%STREAM_NAME%</name>
+            <name>default</name>
 
             <!--
                  Transport protocol:
@@ -92,7 +92,7 @@
             <mountpoint>%STREAM_MOUNTPOINT%</mountpoint>
 
             <!-- Name of the intake entry to use (default: "default") -->
-            <intake>ice3</intake>
+            <intake>default</intake>
 
             <!-- Name of the server entry to use (default: "default") -->
             <server>default</server>
@@ -127,7 +127,7 @@
     <intakes>
         <intake>
             <!-- Identifying name (default: "default") -->
-            <name>ice3</name>
+            <name>default</name>
 
             <!--
                  Media type: autodetect, file, playlist, program, stdin
