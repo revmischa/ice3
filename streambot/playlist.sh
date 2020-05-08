@@ -4,7 +4,7 @@
 
 if [[ -z "${1}" ]]; then
     # get filename to play
-    /home/streamer/.poetry/bin/poetry run s3playlist.py
+    /home/streambot/.poetry/bin/poetry run s3playlist.py
 elif [[ x"${1}" -eq "xartist" ]]; then
     # return artist
     # not implemented...

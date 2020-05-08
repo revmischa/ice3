@@ -57,8 +57,6 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 ADD pyproject.toml poetry.lock  ./
 RUN /home/streambot/.poetry/bin/poetry install --no-dev
 
-ADD ezstream.xml playlist.sh s3playlist.py update-config.sh /home/streambot/
-
 # cleanup
 USER root
 RUN rm -rf /home/streambot/tmp
@@ -67,7 +65,12 @@ RUN yum clean all && \
   rm -rf /var/cache/yum
 
 # configuration
-USER streambot
 WORKDIR /home/streambot
+ADD ezstream.xml playlist.sh s3playlist.py update-config.sh ./
 RUN chmod og-rw ezstream.xml playlist.sh s3playlist.py
-CMD ./update-config.sh && echo "Beginning stream..." && ezstream -vv -c ezstream.xml
+USER root
+RUN chown -R streambot /home/streambot/*
+USER streambot
+
+CMD ./update-config.sh && echo "Beginning stream..." && \
+  while [ true ]; do ezstream -vv -c ezstream.xml; sleep 3; done

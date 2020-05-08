@@ -73,7 +73,7 @@
             <!-- <client_cert>/etc/ssl/private/ezstream.crt</client_cert> -->
 
             <!-- Number of reconnection attempts, before giving up (default: 0) -->
-            <reconnect_attempts>0</reconnect_attempts>
+            <reconnect_attempts>10</reconnect_attempts>
         </server>
     </servers>
 

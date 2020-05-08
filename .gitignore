@@ -95,3 +95,4 @@ ENV/
 ecs-params.yml
 .mypy_cache/
 streambot/ice3.ini
+.env
