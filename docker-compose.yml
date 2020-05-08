@@ -21,6 +21,7 @@ services:
       context: ./icecast
     ports:
       - "8000:8000"
+    env_file: settings.env
     # logging:
     #   driver: awslogs
     #   options:

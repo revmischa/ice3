@@ -18,6 +18,10 @@ RUN rm -rf /etc/yum.repos.d/mp3pkg.repo /root/mp3pkg
 FROM mp3base AS ezstream
 # provide ezstream
 
+RUN useradd -m streambot
+WORKDIR /home/streambot/tmp
+RUN chown -R streambot:streambot /home/streambot/tmp
+
 # deps
 RUN yum -y install clang make libxml2-devel libvorbis-devel wget libid3tag-devel flac libtool gettext-devel check-devel file wget git openssl-devel
 
@@ -27,9 +31,7 @@ RUN cd Icecast-libshout && ./autogen.sh && ./configure && make -j2 && make insta
 RUN rm -rf Icecast-libshout
 
 ENV EZSTREAM_REL=1_0_1
-RUN ["useradd", "-m", "streamer"]
-WORKDIR /home/streamer
-USER streamer
+USER streambot
 RUN wget -O ezstream.tar.gz https://github.com/xiph/ezstream/archive/release_${EZSTREAM_REL}.tar.gz
 RUN ["tar", "-zxf", "ezstream.tar.gz"]
 WORKDIR ezstream-release_1_0_1
@@ -42,36 +44,29 @@ RUN ["make", "install"]
 ###
 
 FROM ezstream AS ice3
-# provide ice3 S3 streamer script
+# provide ice3 S3 streambot script
 
 # deps
 RUN yum -y install python3
+
+USER streambot
+WORKDIR /home/streambot/tmp
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
-USER streamer
-WORKDIR /home/streamer
-
 # python deps
-ADD pyproject.toml  ./
-USER streamer
-# python venv
-RUN poetry install
-RUN ["virtualenv", "venv"]
-RUN ["bash", "-c", "source venv/bin/activate"]
-# python deps
-ADD requirements.txt ./
-RUN bash -c source venv/bin/activate && pip install -r requirements.txt
+ADD pyproject.toml poetry.lock  ./
+RUN /home/streambot/.poetry/bin/poetry install --no-dev
 
-# configuration
-ADD ezstream.xml playlist.sh s3playlist.py update-config.sh ./
+ADD ezstream.xml playlist.sh s3playlist.py update-config.sh /home/streambot/
 
 # cleanup
 USER root
-RUN ["chown", "-R", "streamer", "/home/streamer"]
+RUN rm -rf /home/streambot/tmp
+RUN chown -R streambot /home/streambot
 RUN yum clean all && \
   rm -rf /var/cache/yum
 
- # CMD cat ezstream.xml
-USER streamer
-RUN ["chmod", "og-rw", "ezstream.xml", "playlist.sh", "s3playlist.py"]
+# configuration
+USER streambot
+RUN chmod og-rw ezstream.xml playlist.sh s3playlist.py
 CMD ./update-config.sh && echo "Beginning stream..." && ezstream -vv -c ezstream.xml

@@ -4,7 +4,7 @@
 
 if [[ -z "${1}" ]]; then
     # get filename to play
-    source venv/bin/activate && python2 s3playlist.py
+    /home/streamer/.poetry/bin/poetry run s3playlist.py
 elif [[ x"${1}" -eq "xartist" ]]; then
     # return artist
     # not implemented...
@@ -16,4 +16,3 @@ elif [[ x"${1}" -eq "xtitle" ]]; then
 else
     echo "No idea what you want from me"
 fi
-

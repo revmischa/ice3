@@ -6,8 +6,10 @@ authors = ["Mischa Spiegelmock <me@mish.dev>"]
 license = "WTFPL"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 boto3 = "^1.13.5"
+eyed3 = "^0.9.5"
+configparser = "^5.0.0"
 
 [tool.poetry.dev-dependencies]
 

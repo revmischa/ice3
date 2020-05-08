@@ -87,3 +87,11 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+
+/old
+/icecast.xml
+/streambot.env
+ecs-params.yml
+.mypy_cache/
+streambot/ice3.ini
