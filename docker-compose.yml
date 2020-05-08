@@ -1,0 +1,29 @@
+version: '3'
+services:
+  streambot:
+    build:
+      context: ./streambot
+      # dockerfile: Dockerfile-streambot
+      # target: ice3
+    ports:
+      - "80:8080"
+    env_file: streambot.env
+    depends_on:
+      - icecast
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-group: klulz
+    #     awslogs-region: us-west-2
+    #     awslogs-stream-prefix: icecast
+  icecast:
+    build:
+      context: ./icecast
+    ports:
+      - "8000:8000"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-group: klulz
+    #     awslogs-region: us-west-2
+    #     awslogs-stream-prefix: ice3
